@@ -7,6 +7,7 @@
 {-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE DataKinds                  #-}
+{-# LANGUAGE CPP                        #-}
 
 module Physics.Units.Type where
 
@@ -41,6 +42,7 @@ instance Applicative (Dim i ii iii iv v vi vii) where
   pure = Dim
   Dim f <*> x = f <$> x
 
+#if __GLASGOW_HASKELL__ > 802
 instance (Show x,
    (KnownSymbol ( AppendSymbol (ShowUnit "m" i)
                  ( AppendSymbol (ShowUnit "kg" ii)
@@ -80,3 +82,4 @@ type family ShowNatural a where
   ShowNatural 8 = "⁸"
   ShowNatural 9 = "⁹"
   ShowNatural n = AppendSymbol (ShowNatural (Div n 10)) (ShowNatural (Mod n 10))
+#endif
