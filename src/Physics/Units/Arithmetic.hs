@@ -88,11 +88,11 @@ Dim x >*< Dim y = Dim (x*y)
 (>/<) :: Fractional x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> (Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii') x
 Dim x >/< Dim y = Dim (x/y)
 
-(>+<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => d -> d -> d
-Dim x >+< Dim y = Dim (x+y)
+(>+<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
+x >+< y = (+) <$> x <*> y
 
-(>-<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => d -> d -> d
-Dim x >-< Dim y = Dim (x-y)
+(>-<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
+x >-< y = (-) <$> x <*> y
 
 infixl 5 >+<, >-<
 infixl 6 *<, /<, >/
