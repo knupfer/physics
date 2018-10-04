@@ -73,8 +73,11 @@ type family Pretty d where
   Pretty (Dim P2 P1 N2  Z  Z  Z  Z) = Joule
   Pretty d = d
 
-(*<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => x -> d -> d
-x *< Dim y = Dim (x*y)
+(*<) :: (Num x, Functor f, z ~ f x) => x -> z -> z
+x *< y = fmap (x*) y
+
+(>/) :: (Fractional x, Functor f, z ~ f x) => z -> x -> z
+x >/ y = fmap (/y) x
 
 (/<) :: Fractional x => x -> Dim i ii iii iv v vi vii x -> Pretty (Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii)) x
 x /< Dim y = Dim (x/y)
@@ -92,5 +95,5 @@ Dim x >+< Dim y = Dim (x+y)
 Dim x >-< Dim y = Dim (x-y)
 
 infixl 5 >+<, >-<
-infixl 6 *<, /<
+infixl 6 *<, /<, >/
 infixl 7 >*<, >/<
