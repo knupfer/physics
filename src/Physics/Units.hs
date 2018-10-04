@@ -142,9 +142,9 @@ getDimension _ = Dim 1
 
 -- Base units
 
-type Dimensionless = Dim Null Null Null Null Null Null Null
-dimensionless :: Num a => Dimensionless a
-dimensionless = Dim 1
+type One = Dim Null Null Null Null Null Null Null
+one :: Num a => One a
+one = Dim 1
 
 type Metre = Dim I Null Null Null Null Null Null
 metre :: Num a => Metre a
@@ -176,15 +176,15 @@ candela = Dim 1
 
 -- Derived units
 
-type Radian = Dimensionless
+type Radian = One
 radian :: Num a => Radian a
 radian = Dim 1
 
-type Steradian = Dimensionless
+type Steradian = One
 steradian :: Num a => Steradian a
 steradian = Dim 1
 
-type Hertz = Dimensionless >/< Second
+type Hertz = One >/< Second
 hertz :: Num a => Hertz a
 hertz = Dim 1
 
@@ -220,7 +220,7 @@ type Ohm = Volt >/< Ampere
 ohm :: Num a => Ohm a
 ohm = Dim 1
 
-type Siemens = Dimensionless >/< Ohm
+type Siemens = One >/< Ohm
 siemens :: Num a => Siemens a
 siemens = Dim 1
 
@@ -244,7 +244,7 @@ type Lux = Lumen >/< Metre >/< Metre
 lux :: Num a => Lux a
 lux = Dim 1
 
-type Becquerel = Dimensionless >/< Second
+type Becquerel = One >/< Second
 becquerel :: Num a => Becquerel a
 becquerel = Dim 1
 
