@@ -2,9 +2,12 @@
 {-# LANGUAGE UndecidableInstances       #-}
 {-# LANGUAGE ScopedTypeVariables        #-}
 {-# LANGUAGE FlexibleInstances          #-}
+{-# LANGUAGE DeriveTraversable          #-}
 {-# LANGUAGE KindSignatures             #-}
+{-# LANGUAGE DeriveFoldable             #-}
 {-# LANGUAGE TypeOperators              #-}
 {-# LANGUAGE DeriveFunctor              #-}
+{-# LANGUAGE DeriveGeneric              #-}
 {-# LANGUAGE TypeFamilies               #-}
 {-# LANGUAGE PolyKinds                  #-}
 {-# LANGUAGE DataKinds                  #-}
@@ -14,6 +17,7 @@ module Physics.Units where
 import Data.Proxy
 import GHC.TypeLits (AppendSymbol, symbolVal, KnownSymbol)
 import GHC.TypeNats
+import GHC.Generics
 
 -- Type
 
@@ -38,9 +42,13 @@ newtype Dim
   (mole     :: Exponent)
   (candela  :: Exponent)
   x = Dim x
-  deriving (Eq, Ord, Functor, Enum, Read)
+  deriving (Eq, Ord, Functor, Enum, Read, Bounded, Generic, Foldable, Traversable)
 
--- Show
+-- Instances
+
+instance Applicative (Dim i ii iii iv v vi vii) where
+  pure = Dim
+  Dim f <*> x = f <$> x
 
 instance (Show x,
    (KnownSymbol ( AppendSymbol (ShowUnit "m" i)
