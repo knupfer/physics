@@ -19,12 +19,15 @@ import GHC.TypeNats
 
 data Exponent = Positive Nat | Negative Nat
 
-type Null = 'Positive 0
-type I    = 'Positive 1
-type II   = 'Positive 2
-type III  = 'Positive 3
-type IV   = 'Positive 4
-type V    = 'Positive 5
+type P4 = 'Positive 4
+type P3 = 'Positive 3
+type P2 = 'Positive 2
+type P1 = 'Positive 1
+type  Z = 'Positive 0
+type N1 = 'Negative 1
+type N2 = 'Negative 2
+type N3 = 'Negative 3
+type N4 = 'Negative 4
 
 newtype Dim
   (metre    :: Exponent)
@@ -107,27 +110,59 @@ type family (/<) d d' where
   x /< Dim i ii iii iv v vi vii = Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii) x
 
 type family (>*<) d d' where
-  Dim i ii iii iv v vi vii >*< Dim i' ii' iii' iv' v' vi' vii' = Dim (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii')
+  Dim i ii iii iv v vi vii >*< Dim i' ii' iii' iv' v' vi' vii' = Pretty (Dim (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii'))
 
 type family (>/<) d d' where
-  Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii' = Dim (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii')
+  Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii' = Pretty (Dim (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii'))
 
-(*<) :: Num x => x -> Dim i ii iii iv v vi vii x -> Dim i ii iii iv v vi vii x
+type family Pretty d where
+  Pretty (Dim N2 N1 P3 P2  Z  Z  Z) = Siemens
+  Pretty (Dim N2 N1 P4 P2  Z  Z  Z) = Farad
+  Pretty (Dim N2  Z  Z  Z  Z  Z P1) = Lux
+  Pretty (Dim N1 P1 N2  Z  Z  Z  Z) = Pascal
+--  Pretty (Dim  Z  Z N1  Z  Z  Z  Z) = Hertz
+--  Pretty (Dim  Z  Z N1  Z  Z  Z  Z) = Becquerel
+  Pretty (Dim  Z  Z N1  Z  Z P1  Z) = Katal
+  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = One
+--  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = Radian
+--  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = Steradian
+  Pretty (Dim  Z  Z  Z  Z  Z  Z P1) = Candela
+--  Pretty (Dim  Z  Z  Z  Z  Z  Z P1) = Lumen
+  Pretty (Dim  Z  Z  Z  Z  Z P1  Z) = Mole
+  Pretty (Dim  Z  Z  Z  Z P1  Z  Z) = Kelvin
+  Pretty (Dim  Z  Z  Z P1  Z  Z  Z) = Ampere
+  Pretty (Dim  Z  Z P1  Z  Z  Z  Z) = Second
+  Pretty (Dim  Z  Z P1 P1  Z  Z  Z) = Coulomb
+  Pretty (Dim  Z P1 N2 N1  Z  Z  Z) = Tesla
+  Pretty (Dim  Z P1  Z  Z  Z  Z  Z) = Kilogram
+  Pretty (Dim P1  Z  Z  Z  Z  Z  Z) = Metre
+  Pretty (Dim P1 P1 N2  Z  Z  Z  Z) = Newton
+--  Pretty (Dim P2  Z N2  Z  Z  Z  Z) = Gray
+--  Pretty (Dim P2  Z N2  Z  Z  Z  Z) = Sievert
+  Pretty (Dim P2 P1 N3 N2  Z  Z  Z) = Ohm
+  Pretty (Dim P2 P1 N3 N1  Z  Z  Z) = Volt
+  Pretty (Dim P2 P1 N3  Z  Z  Z  Z) = Watt
+  Pretty (Dim P2 P1 N2 N2  Z  Z  Z) = Henry
+  Pretty (Dim P2 P1 N2 N1  Z  Z  Z) = Weber
+  Pretty (Dim P2 P1 N2  Z  Z  Z  Z) = Joule
+  Pretty d = d
+
+(*<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => x -> d -> d
 x *< Dim y = Dim (x*y)
 
-(/<) :: Fractional x => x -> Dim i ii iii iv v vi vii x -> Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii) x
+(/<) :: Fractional x => x -> Dim i ii iii iv v vi vii x -> Pretty (Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii)) x
 x /< Dim y = Dim (x/y)
 
-(>*<) :: Num x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> Dim (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii') x
+(>*<) :: Num x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> (Dim i ii iii iv v vi vii >*< Dim i' ii' iii' iv' v' vi' vii') x
 Dim x >*< Dim y = Dim (x*y)
 
-(>/<) :: Fractional x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> Dim (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii') x
+(>/<) :: Fractional x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> (Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii') x
 Dim x >/< Dim y = Dim (x/y)
 
-(>+<) :: Num x => Dim i ii iii iv v vi vii x -> Dim i ii iii iv v vi vii x -> Dim i ii iii iv v vi vii x
+(>+<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => d -> d -> d
 Dim x >+< Dim y = Dim (x+y)
 
-(>-<) :: Num x => Dim i ii iii iv v vi vii x -> Dim i ii iii iv v vi vii x -> Dim i ii iii iv v vi vii x
+(>-<) :: (d ~ Dim i ii iii iv v vi vii x, Num x) => d -> d -> d
 Dim x >-< Dim y = Dim (x-y)
 
 infixl 5 >+<, >-<
@@ -142,122 +177,60 @@ getDimension _ = Dim 1
 
 -- Base units
 
-type One = Dim Null Null Null Null Null Null Null
+type One = Dim Z Z Z Z Z Z Z
 one :: Num a => One a
 one = Dim 1
 
-type Metre = Dim I Null Null Null Null Null Null
+type Metre = Dim P1 Z Z Z Z Z Z
 metre :: Num a => Metre a
 metre = Dim 1
 
-type Kilogram = Dim Null I Null Null Null Null Null
+type Kilogram = Dim Z P1 Z Z Z Z Z
 kilogram :: Num a => Kilogram a
 kilogram = Dim 1
 
-type Second = Dim Null Null I Null Null Null Null
+type Second = Dim Z Z P1 Z Z Z Z
 second :: Num a => Second a
 second = Dim 1
 
-type Ampere = Dim Null Null Null I Null Null Null
+type Ampere = Dim Z Z Z P1 Z Z Z
 ampere :: Num a => Ampere a
 ampere = Dim 1
 
-type Kelvin = Dim Null Null Null Null I Null Null
+type Kelvin = Dim Z Z Z Z P1 Z Z
 kelvin :: Num a => Kelvin a
 kelvin = Dim 1
 
-type Mole = Dim Null Null Null Null Null I Null
+type Mole = Dim Z Z Z Z Z P1 Z
 mole :: Num a => Mole a
 mole = Dim 1
 
-type Candela = Dim Null Null Null Null Null Null I
+type Candela = Dim Z Z Z Z Z Z P1
 candela :: Num a => Candela a
 candela = Dim 1
 
 -- Derived units
 
-type Radian = One
-radian :: Num a => Radian a
-radian = Dim 1
-
-type Steradian = One
-steradian :: Num a => Steradian a
-steradian = Dim 1
-
-type Hertz = One >/< Second
-hertz :: Num a => Hertz a
-hertz = Dim 1
-
-type Newton = Kilogram >*< Metre >/< Second >/< Second
-newton :: Num a => Newton a
-newton = Dim 1
-
-type Pascal = Newton >/< Metre >/< Metre
-pascal :: Num a => Pascal a
-pascal = Dim 1
-
-type Joule = Newton >*< Metre
-joule :: Num a => Joule a
-joule = Dim 1
-
-type Watt = Joule >/< Second
-watt :: Num a => Watt a
-watt = Dim 1
-
-type Coulomb = Second >*< Ampere
-coulomb :: Num a => Coulomb a
-coulomb = Dim 1
-
-type Volt = Watt >/< Ampere
-volt :: Num a => Volt a
-volt = Dim 1
-
-type Farad = Coulomb >/< Volt
-farad :: Num a => Farad a
-farad = Dim 1
-
-type Ohm = Volt >/< Ampere
-ohm :: Num a => Ohm a
-ohm = Dim 1
-
-type Siemens = One >/< Ohm
-siemens :: Num a => Siemens a
-siemens = Dim 1
-
-type Weber = Volt >*< Second
-weber :: Num a => Weber a
-weber = Dim 1
-
-type Tesla = Weber >/< Metre >/< Metre
-tesla :: Num a => Tesla a
-tesla = Dim 1
-
-type Henry = Weber >/< Ampere
-henry :: Num a => Henry a
-henry = Dim 1
-
-type Lumen = Candela
-lumen :: Num a => Lumen a
-lumen = Dim 1
-
-type Lux = Lumen >/< Metre >/< Metre
-lux :: Num a => Lux a
-lux = Dim 1
-
-type Becquerel = One >/< Second
-becquerel :: Num a => Becquerel a
-becquerel = Dim 1
-
-type Gray = Joule >/< Kilogram
-gray :: Num a => Gray a
-gray = Dim 1
-
-type Sievert = Joule >/< Kilogram
-sievert :: Num a => Sievert a
-sievert = Dim 1
-
-type Katal = Mole >/< Second
-katal :: Num a => Katal a
-katal = Dim 1
+type Siemens   = Dim N2 N1 P3 P2  Z  Z  Z; siemens   :: Num a => Siemens   a; siemens   = Dim 1
+type Farad     = Dim N2 N1 P4 P2  Z  Z  Z; farad     :: Num a => Farad     a; farad     = Dim 1
+type Lux       = Dim N2  Z  Z  Z  Z  Z P1; lux       :: Num a => Lux       a; lux       = Dim 1
+type Pascal    = Dim N1 P1 N2  Z  Z  Z  Z; pascal    :: Num a => Pascal    a; pascal    = Dim 1
+type Hertz     = Dim  Z  Z N1  Z  Z  Z  Z; hertz     :: Num a => Hertz     a; hertz     = Dim 1
+type Becquerel = Dim  Z  Z N1  Z  Z  Z  Z; becquerel :: Num a => Becquerel a; becquerel = Dim 1
+type Katal     = Dim  Z  Z N1  Z  Z P1  Z; katal     :: Num a => Katal     a; katal     = Dim 1
+type Radian    = Dim  Z  Z  Z  Z  Z  Z  Z; radian    :: Num a => Radian    a; radian    = Dim 1
+type Steradian = Dim  Z  Z  Z  Z  Z  Z  Z; steradian :: Num a => Steradian a; steradian = Dim 1
+type Lumen     = Dim  Z  Z  Z  Z  Z  Z P1; lumen     :: Num a => Lumen     a; lumen     = Dim 1
+type Coulomb   = Dim  Z  Z P1 P1  Z  Z  Z; coulomb   :: Num a => Coulomb   a; coulomb   = Dim 1
+type Tesla     = Dim  Z P1 N2 N1  Z  Z  Z; tesla     :: Num a => Tesla     a; tesla     = Dim 1
+type Newton    = Dim P1 P1 N2  Z  Z  Z  Z; newton    :: Num a => Newton    a; newton    = Dim 1
+type Gray      = Dim P2  Z N2  Z  Z  Z  Z; gray      :: Num a => Gray      a; gray      = Dim 1
+type Sievert   = Dim P2  Z N2  Z  Z  Z  Z; sievert   :: Num a => Sievert   a; sievert   = Dim 1
+type Ohm       = Dim P2 P1 N3 N2  Z  Z  Z; ohm       :: Num a => Ohm       a; ohm       = Dim 1
+type Volt      = Dim P2 P1 N3 N1  Z  Z  Z; volt      :: Num a => Volt      a; volt      = Dim 1
+type Watt      = Dim P2 P1 N3  Z  Z  Z  Z; watt      :: Num a => Watt      a; watt      = Dim 1
+type Henry     = Dim P2 P1 N2 N2  Z  Z  Z; henry     :: Num a => Henry     a; henry     = Dim 1
+type Weber     = Dim P2 P1 N2 N1  Z  Z  Z; weber     :: Num a => Weber     a; weber     = Dim 1
+type Joule     = Dim P2 P1 N2  Z  Z  Z  Z; joule     :: Num a => Joule     a; joule     = Dim 1
 
 
