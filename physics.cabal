@@ -10,7 +10,12 @@ copyright:           2018, Florian Knupfer
 category:            Science
 build-type:          Simple
 cabal-version:       >=1.10
-source-repository     head
+tested-with:         GHC == 7.10.3
+                   , GHC == 8.0.2
+                   , GHC == 8.2.2
+                   , GHC == 8.4.3
+                   , GHC == 8.6.1
+source-repository    head
    Type: git
    Location: https://github.com/knupfer/physics
 
@@ -20,7 +25,7 @@ library
                    , Physics.Units.Derived
                    , Physics.Units.Arithmetic
   other-modules:     Physics.Units.Type
-  build-depends:     base <= 4.12
+  build-depends:     base <= 5
   ghc-options:       -Wall
   hs-source-dirs:    src
   default-language:  Haskell2010
