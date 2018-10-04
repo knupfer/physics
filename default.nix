@@ -1,4 +1,4 @@
-{ nixpkgs ? import <nixpkgs> {}, compiler ? "" }:
+{ nixpkgs ? import ./nixpkgs.nix, compiler ? "" }:
 
 with nixpkgs;
 let ghc = if compiler == "" then haskellPackages else haskell.packages.${compiler}; in
