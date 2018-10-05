@@ -1,13 +1,19 @@
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE FlexibleContexts     #-}
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE DataKinds            #-}
 
 module Physics.Units.Arithmetic where
 
-import Physics.Units.Base
-import Physics.Units.Derived
+import qualified Physics.Units.SI.Base     as SI
+import qualified Physics.Units.SI.Derived  as SI
+import qualified Physics.Units.Planck.Base as Planck
+import Physics.Units.SI.Type (SI)
+import Physics.Units.Planck.Type (Planck)
+import Physics.Units.Type
 
+import Data.Coerce
 import GHC.TypeLits
 
 type family Plus a b where
@@ -30,56 +36,64 @@ type family Minus a b where
   Minus x ('Positive m) = Plus x ('Negative m)
 
 type family (^+) d n where
-  d ^+ 0 = One
+  d ^+ 0 = d >/< d
   d ^+ n = d >*< d^+(n-1)
 
 type family (^-) d n where
-  d ^- 0 = One
-  d ^- n = One >/< d^+n
+  d ^- n = d >/< d^+(n+1)
 
 type family (*<) d d' where
-  x *< Dim i ii iii iv v vi vii = Dim i ii iii iv v vi vii x
+  x *< f = (Pretty f) x
 
 type family (/<) d d' where
-  x /< Dim i ii iii iv v vi vii = Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii) x
+  x /< SI i ii iii iv v vi vii = Pretty (SI (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii)) x
+  x /< Planck i ii iii iv v    = Pretty (Planck (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v)) x
 
 type family (>*<) d d' where
-  Dim i ii iii iv v vi vii >*< Dim i' ii' iii' iv' v' vi' vii' = Pretty (Dim (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii'))
+  SI i ii iii iv v vi vii >*< SI i' ii' iii' iv' v' vi' vii' = Pretty (SI (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii'))
+  Planck i ii iii iv v    >*< Planck i' ii' iii' iv' v'      = Pretty (Planck (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v'))
 
 type family (>/<) d d' where
-  Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii' = Pretty (Dim (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii'))
+  SI i ii iii iv v vi vii >/< SI i' ii' iii' iv' v' vi' vii' = Pretty (SI (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii'))
+  Planck i ii iii iv v    >/< Planck i' ii' iii' iv' v'      = Pretty (Planck (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v'))
 
 type family Pretty d where
-  Pretty (Dim N2 N1 P3 P2  Z  Z  Z) = Siemens
-  Pretty (Dim N2 N1 P4 P2  Z  Z  Z) = Farad
-  Pretty (Dim N2  Z  Z  Z  Z  Z P1) = Lux
-  Pretty (Dim N1 P1 N2  Z  Z  Z  Z) = Pascal
---  Pretty (Dim  Z  Z N1  Z  Z  Z  Z) = Hertz
---  Pretty (Dim  Z  Z N1  Z  Z  Z  Z) = Becquerel
-  Pretty (Dim  Z  Z N1  Z  Z P1  Z) = Katal
-  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = One
---  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = Radian
---  Pretty (Dim  Z  Z  Z  Z  Z  Z  Z) = Steradian
-  Pretty (Dim  Z  Z  Z  Z  Z  Z P1) = Candela
---  Pretty (Dim  Z  Z  Z  Z  Z  Z P1) = Lumen
-  Pretty (Dim  Z  Z  Z  Z  Z P1  Z) = Mole
-  Pretty (Dim  Z  Z  Z  Z P1  Z  Z) = Kelvin
-  Pretty (Dim  Z  Z  Z P1  Z  Z  Z) = Ampere
-  Pretty (Dim  Z  Z P1  Z  Z  Z  Z) = Second
-  Pretty (Dim  Z  Z P1 P1  Z  Z  Z) = Coulomb
-  Pretty (Dim  Z P1 N2 N1  Z  Z  Z) = Tesla
-  Pretty (Dim  Z P1  Z  Z  Z  Z  Z) = Kilogram
-  Pretty (Dim P1  Z  Z  Z  Z  Z  Z) = Metre
-  Pretty (Dim P1 P1 N2  Z  Z  Z  Z) = Newton
---  Pretty (Dim P2  Z N2  Z  Z  Z  Z) = Gray
---  Pretty (Dim P2  Z N2  Z  Z  Z  Z) = Sievert
-  Pretty (Dim P2 P1 N3 N2  Z  Z  Z) = Ohm
-  Pretty (Dim P2 P1 N3 N1  Z  Z  Z) = Volt
-  Pretty (Dim P2 P1 N3  Z  Z  Z  Z) = Watt
-  Pretty (Dim P2 P1 N2 N2  Z  Z  Z) = Henry
-  Pretty (Dim P2 P1 N2 N1  Z  Z  Z) = Weber
-  Pretty (Dim P2 P1 N2  Z  Z  Z  Z) = Joule
+  Pretty (SI N2 N1 P3 P2  Z  Z  Z) = SI.Siemens
+  Pretty (SI N2 N1 P4 P2  Z  Z  Z) = SI.Farad
+  Pretty (SI N2  Z  Z  Z  Z  Z P1) = SI.Lux
+  Pretty (SI N1 P1 N2  Z  Z  Z  Z) = SI.Pascal
+--Pretty (SI  Z  Z N1  Z  Z  Z  Z) = SI.Hertz
+--Pretty (SI  Z  Z N1  Z  Z  Z  Z) = SI.Becquerel
+  Pretty (SI  Z  Z N1  Z  Z P1  Z) = SI.Katal
+  Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.One
+--Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.Radian
+--Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.Steradian
+  Pretty (SI  Z  Z  Z  Z  Z  Z P1) = SI.Candela
+--Pretty (SI  Z  Z  Z  Z  Z  Z P1) = SI.Lumen
+  Pretty (SI  Z  Z  Z  Z  Z P1  Z) = SI.Mole
+  Pretty (SI  Z  Z  Z  Z P1  Z  Z) = SI.Kelvin
+  Pretty (SI  Z  Z  Z P1  Z  Z  Z) = SI.Ampere
+  Pretty (SI  Z  Z P1  Z  Z  Z  Z) = SI.Second
+  Pretty (SI  Z  Z P1 P1  Z  Z  Z) = SI.Coulomb
+  Pretty (SI  Z P1 N2 N1  Z  Z  Z) = SI.Tesla
+  Pretty (SI  Z P1  Z  Z  Z  Z  Z) = SI.Kilogram
+  Pretty (SI P1  Z  Z  Z  Z  Z  Z) = SI.Metre
+  Pretty (SI P1 P1 N2  Z  Z  Z  Z) = SI.Newton
+--Pretty (SI P2  Z N2  Z  Z  Z  Z) = SI.Gray
+--Pretty (SI P2  Z N2  Z  Z  Z  Z) = SI.Sievert
+  Pretty (SI P2 P1 N3 N2  Z  Z  Z) = SI.Ohm
+  Pretty (SI P2 P1 N3 N1  Z  Z  Z) = SI.Volt
+  Pretty (SI P2 P1 N3  Z  Z  Z  Z) = SI.Watt
+  Pretty (SI P2 P1 N2 N2  Z  Z  Z) = SI.Henry
+  Pretty (SI P2 P1 N2 N1  Z  Z  Z) = SI.Weber
+  Pretty (SI P2 P1 N2  Z  Z  Z  Z) = SI.Joule
   Pretty d = d
+
+value :: Coercible (f a) a => f a -> a
+value = coerce
+
+unit :: (Num a, Functor f) => f b -> f a
+unit = fmap (const 1)
 
 (*<) :: (Num x, Functor f, z ~ f x) => x -> z -> z
 x *< y = fmap (x*) y
@@ -87,14 +101,14 @@ x *< y = fmap (x*) y
 (>/) :: (Fractional x, Functor f, z ~ f x) => z -> x -> z
 x >/ y = fmap (/y) x
 
-(/<) :: Fractional x => x -> Dim i ii iii iv v vi vii x -> Pretty (Dim (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii)) x
-x /< Dim y = Dim (x/y)
+(/<) :: (Fractional x, Functor f, Coercible (f x) (x /< f)) => x -> f x -> x /< f
+x /< y = coerce (fmap (x/) y)
 
-(>*<) :: Num x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> (Dim i ii iii iv v vi vii >*< Dim i' ii' iii' iv' v' vi' vii') x
-Dim x >*< Dim y = Dim (x*y)
+(>*<) :: (Num x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>*<f')) => f x -> f' x -> (f >*< f') x
+x >*< y = pure (coerce x * coerce y)
 
-(>/<) :: Fractional x => Dim i ii iii iv v vi vii x -> Dim i' ii' iii' iv' v' vi' vii' x -> (Dim i ii iii iv v vi vii >/< Dim i' ii' iii' iv' v' vi' vii') x
-Dim x >/< Dim y = Dim (x/y)
+(>/<) :: (Fractional x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>/<f')) => f x -> f' x -> (f >/< f') x
+x >/< y = pure (coerce x / coerce y)
 
 (>+<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
 x >+< y = (+) <$> x <*> y

@@ -20,13 +20,17 @@ source-repository    head
    Location: https://github.com/knupfer/physics
 
 library
-  exposed-modules:   Physics.Units
-                   , Physics.Units.Base
-                   , Physics.Units.Derived
+  exposed-modules:   Physics.Units.SI
+                   , Physics.Units.SI.Base
+                   , Physics.Units.SI.Derived
+                   , Physics.Units.SI.Constants
+                   , Physics.Units.Planck
+                   , Physics.Units.Planck.Base
                    , Physics.Units.Arithmetic
                    , Physics.Units.Prefixes
-                   , Physics.Constants
   other-modules:     Physics.Units.Type
+                   , Physics.Units.SI.Type
+                   , Physics.Units.Planck.Type
   build-depends:     base <= 5
   ghc-options:       -Wall
   hs-source-dirs:    src

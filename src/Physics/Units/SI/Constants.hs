@@ -1,44 +1,44 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds     #-}
-module Physics.Constants where
+module Physics.Units.SI.Constants where
 
-import Physics.Units
+import Physics.Units.SI
 
 -- Planck units
 
 planckLength :: Fractional a => Metre a
-planckLength = Dim 1.616229e-35
+planckLength = SI 1.616229e-35
 
 planckMass :: Fractional a => Kilogram a
-planckMass = Dim 2.176470e-8
+planckMass = SI 2.176470e-8
 
 planckTime :: Fractional a => Second a
-planckTime = Dim 5.39116e-44
+planckTime = SI 5.39116e-44
 
 planckCharge :: Fractional a => Coulomb a
-planckCharge = Dim 1.875545956e-18
+planckCharge = SI 1.875545956e-18
 
 planckTemperature :: Num a => Kelvin a
-planckTemperature = Dim (1416808*10^(26::Int))
+planckTemperature = SI (1416808*10^(26::Int))
 
 -- Universal constants
 
 lightspeed :: Num a => a *<Metre>/<Second
-lightspeed = Dim 299792458
+lightspeed = SI 299792458
 
 gravitationalConstant :: Fractional a => a *<Metre^+3>/<Kilogram>/<Second^+2
-gravitationalConstant = Dim 6.67408e-11
+gravitationalConstant = SI 6.67408e-11
 
 planckConstant :: Fractional a => a *<Joule>*<Second
-planckConstant = Dim 6.626070040e-34
+planckConstant = SI 6.626070040e-34
 
 reducedPlanckConstant :: Fractional a => a *<Joule>*<Second
-reducedPlanckConstant = Dim 1.054571800e-34
+reducedPlanckConstant = SI 1.054571800e-34
 
 -- Electromagnetic constants
 
 magneticConstant :: Floating a => a *<Newton>/<Ampere^+2
-magneticConstant = Dim (pi*4e-7)
+magneticConstant = SI (pi*4e-7)
 
 electricConstant :: Floating a => a *<Farad>/<Metre
 electricConstant = one>/<(magneticConstant>*<lightspeed>*<lightspeed)
@@ -62,7 +62,7 @@ inverseConductanceQuantum :: Fractional a => Ohm a
 inverseConductanceQuantum = 12906.4037278 *<ohm
 
 josephsonConstant :: Num a => a *<One>/<Volt>/<Second
-josephsonConstant = Dim (4835978525*10^(5::Int))
+josephsonConstant = SI (4835978525*10^(5::Int))
 
 magneticFluxQuantum :: Fractional a => Weber a
 magneticFluxQuantum = 2.067833831e-15 *<weber
@@ -85,7 +85,7 @@ electronMass :: Fractional a => Kilogram a
 electronMass = 9.10938356e-31 *< kilogram
 
 fermiCouplingConstant :: Num a => a *<Joule^-2
-fermiCouplingConstant = Dim (45437957*10^(7::Int))
+fermiCouplingConstant = SI (45437957*10^(7::Int))
 
 fineStructureConstant :: Fractional a => One a
 fineStructureConstant = 7.2973525664e-3*<one
@@ -117,7 +117,7 @@ atomicMassConstant :: Fractional a => Kilogram a
 atomicMassConstant = 1.660539040e-27 *< kilogram
 
 avogadroConstant :: Num a => a *<Mole^-1
-avogadroConstant = Dim (6022140857*10^(14::Int))
+avogadroConstant = SI (6022140857*10^(14::Int))
 
 boltzmannConstant :: Fractional a => a *<Joule>/<Kelvin
 boltzmannConstant = 1.38064852e-23*<joule>/<kelvin
@@ -132,36 +132,36 @@ firstRadiationConstantForSpectralRadiance :: Fractional a => a *<Watt>*<Metre^+2
 firstRadiationConstantForSpectralRadiance = 1.191042953e-16*<watt>*<metre>*<metre
 
 lochschmidtConstant :: Num a => a *<Metre^-3
-lochschmidtConstant = Dim (26867811*10^(18::Int))
+lochschmidtConstant = SI (26867811*10^(18::Int))
 
 gasConstant :: Fractional a => a *<Joule>/<Mole>/<Kelvin
-gasConstant = Dim 8.3144598
+gasConstant = SI 8.3144598
 
 molarPlanckConstant :: Fractional a => a *<Joule>*<Second>/<Mole
-molarPlanckConstant = Dim 3.9903127110e-10
+molarPlanckConstant = SI 3.9903127110e-10
 
 secondRadiationConstant :: Fractional a => a *<Metre>*<Kelvin
-secondRadiationConstant = Dim 1.43877736e-2
+secondRadiationConstant = SI 1.43877736e-2
 
 stefanBoltzmannConstant :: Fractional a => a *<Watt>/<Metre^+2>/<Kelvin^+4
-stefanBoltzmannConstant = Dim 5.670367e-8
+stefanBoltzmannConstant = SI 5.670367e-8
 
 wienDisplacementLawConstant :: Fractional a => a *<Metre>*<Kelvin
-wienDisplacementLawConstant = Dim 2.8977729e-3
+wienDisplacementLawConstant = SI 2.8977729e-3
 
 wienBonalEntropyDisplacementLawConstant :: Fractional a => a *<Metre>*<Kelvin
-wienBonalEntropyDisplacementLawConstant = Dim 3.0029152e-3
+wienBonalEntropyDisplacementLawConstant = SI 3.0029152e-3
 
 -- Adopted values
 
 molarMassConstant :: Fractional a => a *<Kilogram>*<Mole
-molarMassConstant = Dim 1e-3
+molarMassConstant = SI 1e-3
 
 molarMassOfCarbon12 :: Fractional a => a *<Kilogram>*<Mole
-molarMassOfCarbon12 = Dim 1.2e-2
+molarMassOfCarbon12 = SI 1.2e-2
 
 standardAccelerationOfGravity :: Fractional a => a *<Metre>/<Second^+2
-standardAccelerationOfGravity = Dim 9.80665
+standardAccelerationOfGravity = SI 9.80665
 
 standardAtmosphere :: Num a => Pascal a
-standardAtmosphere = Dim 101325
+standardAtmosphere = SI 101325
