@@ -5,11 +5,11 @@ module Physics.Units.Base
 
 import Physics.Units.Type
 
-getValue :: Dim i ii iii iv v vi vii a -> a
-getValue (Dim a) = a
+value :: Dim i ii iii iv v vi vii a -> a
+value (Dim a) = a
 
-getDimension :: Num a => Dim i ii iii iv v vi vii a -> Dim i ii iii iv v vi vii a
-getDimension _ = Dim 1
+unit :: (Num a, Functor f) => f b -> f a
+unit = fmap (const 1)
 
 type One = Dim Z Z Z Z Z Z Z
 one :: Num a => One a
