@@ -29,6 +29,14 @@ type family Minus a b where
   Minus x ('Negative m) = Plus x ('Positive m)
   Minus x ('Positive m) = Plus x ('Negative m)
 
+type family (^+) d n where
+  _ ^+ 0 = One
+  d ^+ n = d >*< d^+(n-1)
+
+type family (^-) d n where
+  _ ^- 0 = One
+  d ^- n = One >/< d^+n
+
 type family (*<) d d' where
   x *< Dim i ii iii iv v vi vii = Dim i ii iii iv v vi vii x
 
@@ -97,3 +105,4 @@ x >-< y = (-) <$> x <*> y
 infixl 5 >+<, >-<
 infixl 6 *<, /<, >/
 infixl 7 >*<, >/<
+infixr 8 ^+, ^-

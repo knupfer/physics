@@ -25,6 +25,7 @@ library
                    , Physics.Units.Derived
                    , Physics.Units.Arithmetic
                    , Physics.Units.Prefixes
+                   , Physics.Constants
   other-modules:     Physics.Units.Type
   build-depends:     base <= 5
   ghc-options:       -Wall
