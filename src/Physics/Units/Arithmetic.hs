@@ -8,7 +8,6 @@ module Physics.Units.Arithmetic where
 
 import qualified Physics.Units.SI.Base     as SI
 import qualified Physics.Units.SI.Derived  as SI
-import qualified Physics.Units.Planck.Base as Planck
 import Physics.Units.SI.Type (SI)
 import Physics.Units.Planck.Type (Planck)
 import Physics.Units.Type
