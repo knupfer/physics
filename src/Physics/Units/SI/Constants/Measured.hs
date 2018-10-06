@@ -5,7 +5,7 @@ module Physics.Units.SI.Constants.Measured where
 import Physics.Units.SI
 
 electronRelativeMass :: Fractional a => One a
-electronRelativeMass =  5.485799111e-4 *< one
+electronRelativeMass = 5.485799111e-4 *< one
 
 fineStructureConstant :: Fractional a => One a
 fineStructureConstant = 7.2973525664e-3 *< one

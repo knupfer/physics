@@ -17,6 +17,67 @@ import Data.Coerce
 import Data.Proxy
 import GHC.TypeLits
 
+value :: Coercible (f a) a => f a -> a
+value = coerce
+
+unit :: (Num a, Functor f) => f b -> f a
+unit = fmap (const 1)
+
+(*<) :: (Num x, Functor f, z ~ f x) => x -> z -> z
+x *< y = fmap (x*) y
+
+(>/) :: (Fractional x, Functor f, z ~ f x) => z -> x -> z
+x >/ y = fmap (/y) x
+
+(/<) :: (Fractional x, Functor f, Coercible (f x) ((f^-1) x)) => x -> f x -> (f^-1) x
+x /< y = coerce (fmap (x/) y)
+
+(>*<) :: (Num x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>*<f')) => f x -> f' x -> (f >*< f') x
+x >*< y = pure (coerce x * coerce y)
+
+(>/<) :: (Fractional x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>/<f')) => f x -> f' x -> (f >/< f') x
+x >/< y = pure (coerce x / coerce y)
+
+(>+<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
+x >+< y = (+) <$> x <*> y
+
+(>-<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
+x >-< y = (-) <$> x <*> y
+
+infixl 6 >+<, >-<
+infixl 7 >*<, >/<, *<, /<, >/
+infixr 8 ^+, ^-
+
+nthRoot :: (KnownNat n, Floating x, Functor f, Coercible (f x) (NthRoot n f x)) => Proxy n -> f x -> NthRoot n f x
+nthRoot p = coerce . fmap (** recip (fromInteger $ natVal p))
+
+type SquareRoot d = NthRoot 2 d
+squareRoot :: (Coercible (f x) (SquareRoot f x), Floating x, Functor f) => f x -> SquareRoot f x
+squareRoot = nthRoot (Proxy :: Proxy 2)
+
+type SquareCube d = NthRoot 3 d
+cubeRoot :: (Coercible (f x) (SquareCube f x), Floating x, Functor f) => f x -> SquareCube f x
+cubeRoot = nthRoot (Proxy :: Proxy 3)
+
+hypercube :: (KnownNat n, Num x, Functor f, Coercible (f x) ((f^+n) x)) => Proxy n -> f x -> (f^+n) x
+hypercube p = coerce . fmap (^natVal p)
+
+type Square d = d^+2
+square :: (Coercible (f x) (Square f x), Num x, Functor f) => f x -> Square f x
+square = hypercube (Proxy :: Proxy 2)
+
+type Cube d = d^+3
+cube :: (Coercible (f x) (Cube f x), Num x, Functor f) => f x -> Cube f x
+cube = hypercube (Proxy :: Proxy 3)
+
+type Tesseract d = d^+4
+tesseract :: (Coercible (f x) (Tesseract f x), Num x, Functor f) => f x -> Tesseract f x
+tesseract = hypercube (Proxy :: Proxy 4)
+
+type Penteract d = d^+5
+penteract :: (Coercible (f x) (Penteract f x), Num x, Functor f) => f x -> Penteract f x
+penteract = hypercube (Proxy :: Proxy 5)
+
 type family Plus a b where
   Plus ('Negative 0) x = x
   Plus x ('Negative 0) = x
@@ -78,36 +139,6 @@ type family Divide e n where
   Divide ('Positive x) y = 'Positive (IsInteger x y (Mod x y))
   Divide ('Negative x) y = 'Negative (IsInteger x y (Mod x y))
 
-nthRoot :: (KnownNat n, Floating x, Functor f, Coercible (f x) (NthRoot n f x)) => Proxy n -> f x -> NthRoot n f x
-nthRoot p = coerce . fmap (** recip (fromInteger $ natVal p))
-
-type SquareRoot d = NthRoot 2 d
-squareRoot :: (Coercible (f x) (SquareRoot f x), Floating x, Functor f) => f x -> SquareRoot f x
-squareRoot = nthRoot (Proxy :: Proxy 2)
-
-type SquareCube d = NthRoot 3 d
-cubeRoot :: (Coercible (f x) (SquareCube f x), Floating x, Functor f) => f x -> SquareCube f x
-cubeRoot = nthRoot (Proxy :: Proxy 3)
-
-hypercube :: (KnownNat n, Num x, Functor f, Coercible (f x) ((f^+n) x)) => Proxy n -> f x -> (f^+n) x
-hypercube p = coerce . fmap (^natVal p)
-
-type Square d = d^+2
-square :: (Coercible (f x) (Square f x), Num x, Functor f) => f x -> Square f x
-square = hypercube (Proxy :: Proxy 2)
-
-type Cube d = d^+3
-cube :: (Coercible (f x) (Cube f x), Num x, Functor f) => f x -> Cube f x
-cube = hypercube (Proxy :: Proxy 3)
-
-type Tesseract d = d^+4
-tesseract :: (Coercible (f x) (Tesseract f x), Num x, Functor f) => f x -> Tesseract f x
-tesseract = hypercube (Proxy :: Proxy 4)
-
-type Penteract d = d^+5
-penteract :: (Coercible (f x) (Penteract f x), Num x, Functor f) => f x -> Penteract f x
-penteract = hypercube (Proxy :: Proxy 5)
-
 type family Pretty d where
   Pretty (SI N2 N1 P3 P2  Z  Z  Z) = SI.Siemens
   Pretty (SI N2 N1 P4 P2  Z  Z  Z) = SI.Farad
@@ -133,33 +164,3 @@ type family Pretty d where
   Pretty (SI P2 P1 N2  Z  Z  Z  Z) = SI.Joule
   Pretty d = d
 
-value :: Coercible (f a) a => f a -> a
-value = coerce
-
-unit :: (Num a, Functor f) => f b -> f a
-unit = fmap (const 1)
-
-(*<) :: (Num x, Functor f, z ~ f x) => x -> z -> z
-x *< y = fmap (x*) y
-
-(>/) :: (Fractional x, Functor f, z ~ f x) => z -> x -> z
-x >/ y = fmap (/y) x
-
-(/<) :: (Fractional x, Functor f, Coercible (f x) ((f^-1) x)) => x -> f x -> (f^-1) x
-x /< y = coerce (fmap (x/) y)
-
-(>*<) :: (Num x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>*<f')) => f x -> f' x -> (f >*< f') x
-x >*< y = pure (coerce x * coerce y)
-
-(>/<) :: (Fractional x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>/<f')) => f x -> f' x -> (f >/< f') x
-x >/< y = pure (coerce x / coerce y)
-
-(>+<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
-x >+< y = (+) <$> x <*> y
-
-(>-<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
-x >-< y = (-) <$> x <*> y
-
-infixl 6 >+<, >-<
-infixl 7 >*<, >/<, *<, /<, >/
-infixr 8 ^+, ^-
