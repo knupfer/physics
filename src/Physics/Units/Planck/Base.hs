@@ -5,6 +5,10 @@ module Physics.Units.Planck.Base
 
 import Physics.Units.Planck.Type
 
+type One = Planck Z Z Z Z Z
+one :: Num a => One a
+one = Planck 1
+
 type Metre = Planck P1 Z Z Z Z
 metre :: Num a => Metre a
 metre = Planck 1

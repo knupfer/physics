@@ -26,6 +26,7 @@ library
                    , Physics.Units.SI.Constants
                    , Physics.Units.Planck
                    , Physics.Units.Planck.Base
+                   , Physics.Units.Planck.Derived
                    , Physics.Units.Convert
                    , Physics.Units.Arithmetic
                    , Physics.Units.Prefixes
