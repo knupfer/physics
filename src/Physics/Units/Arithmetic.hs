@@ -3,6 +3,7 @@
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE DataKinds            #-}
+{-# LANGUAGE CPP                  #-}
 
 module Physics.Units.Arithmetic where
 
@@ -50,6 +51,44 @@ type family (^+) d n where
 type family (^-) d n where
   d ^- n = d >/< d^+(n+1)
 
+type family NthRoot n d where
+  NthRoot 1 d = d
+  NthRoot n (SI i ii iii iv v vi vii) = SI (Divide i n) (Divide ii n) (Divide iii n) (Divide iv n) (Divide v n) (Divide vi n) (Divide vii n)
+  NthRoot n (Planck i ii iii iv v) = Planck (Divide i n) (Divide ii n) (Divide iii n) (Divide iv n) (Divide v n)
+
+type family IsInteger a b c where
+  IsInteger a b 0 = Div a b
+#if __GLASGOW_HASKELL__ >= 804
+  IsInteger a b c = TypeError ( 'ShowType a
+                                ':<>: 'Text "/"
+                                ':<>: 'ShowType b
+                                ':<>: 'Text ": Rational exponents are not yet supported."
+                              )
+#else
+type family Mod x y where
+  Mod 0 y = 0
+  Mod x y = Mod (x-y) y
+
+type family Div x y where
+  Div 0 y = 0
+  Div x y = 1 + Div (x-y) y
+#endif
+
+type family Divide e n where
+  Divide ('Positive x) y = 'Positive (IsInteger x y (Mod x y))
+  Divide ('Negative x) y = 'Negative (IsInteger x y (Mod x y))
+
+nthRoot :: (KnownNat n, Floating x, Functor f, Coercible (f x) (NthRoot n f x)) => Proxy n -> f x -> NthRoot n f x
+nthRoot p = coerce . fmap (** recip (fromInteger $ natVal p))
+
+type SquareRoot d = NthRoot 2 d
+squareRoot :: (Coercible (f x) (SquareRoot f x), Floating x, Functor f) => f x -> SquareRoot f x
+squareRoot = nthRoot (Proxy :: Proxy 2)
+
+type SquareCube d = NthRoot 3 d
+cubeRoot :: (Coercible (f x) (SquareCube f x), Floating x, Functor f) => f x -> SquareCube f x
+cubeRoot = nthRoot (Proxy :: Proxy 3)
+
 hypercube :: (KnownNat n, Num x, Functor f, Coercible (f x) ((f^+n) x)) => Proxy n -> f x -> (f^+n) x
 hypercube p = coerce . fmap (^natVal p)
 
@@ -69,20 +108,14 @@ type Penteract d = d^+5
 penteract :: (Coercible (f x) (Penteract f x), Num x, Functor f) => f x -> Penteract f x
 penteract = hypercube (Proxy :: Proxy 5)
 
-
 type family Pretty d where
   Pretty (SI N2 N1 P3 P2  Z  Z  Z) = SI.Siemens
   Pretty (SI N2 N1 P4 P2  Z  Z  Z) = SI.Farad
   Pretty (SI N2  Z  Z  Z  Z  Z P1) = SI.Lux
   Pretty (SI N1 P1 N2  Z  Z  Z  Z) = SI.Pascal
---Pretty (SI  Z  Z N1  Z  Z  Z  Z) = SI.Hertz
---Pretty (SI  Z  Z N1  Z  Z  Z  Z) = SI.Becquerel
   Pretty (SI  Z  Z N1  Z  Z P1  Z) = SI.Katal
   Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.One
---Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.Radian
---Pretty (SI  Z  Z  Z  Z  Z  Z  Z) = SI.Steradian
   Pretty (SI  Z  Z  Z  Z  Z  Z P1) = SI.Candela
---Pretty (SI  Z  Z  Z  Z  Z  Z P1) = SI.Lumen
   Pretty (SI  Z  Z  Z  Z  Z P1  Z) = SI.Mole
   Pretty (SI  Z  Z  Z  Z P1  Z  Z) = SI.Kelvin
   Pretty (SI  Z  Z  Z P1  Z  Z  Z) = SI.Ampere
@@ -92,8 +125,6 @@ type family Pretty d where
   Pretty (SI  Z P1  Z  Z  Z  Z  Z) = SI.Kilogram
   Pretty (SI P1  Z  Z  Z  Z  Z  Z) = SI.Metre
   Pretty (SI P1 P1 N2  Z  Z  Z  Z) = SI.Newton
---Pretty (SI P2  Z N2  Z  Z  Z  Z) = SI.Gray
---Pretty (SI P2  Z N2  Z  Z  Z  Z) = SI.Sievert
   Pretty (SI P2 P1 N3 N2  Z  Z  Z) = SI.Ohm
   Pretty (SI P2 P1 N3 N1  Z  Z  Z) = SI.Volt
   Pretty (SI P2 P1 N3  Z  Z  Z  Z) = SI.Watt
