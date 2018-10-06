@@ -41,13 +41,6 @@ type family (^+) d n where
 type family (^-) d n where
   d ^- n = d >/< d^+(n+1)
 
-type family (*<) d d' where
-  x *< f = (Pretty f) x
-
-type family (/<) d d' where
-  x /< SI i ii iii iv v vi vii = Pretty (SI (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v) (Negate vi) (Negate vii)) x
-  x /< Planck i ii iii iv v    = Pretty (Planck (Negate i) (Negate ii) (Negate iii) (Negate iv) (Negate v)) x
-
 type family (>*<) d d' where
   SI i ii iii iv v vi vii >*< SI i' ii' iii' iv' v' vi' vii' = Pretty (SI (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii'))
   Planck i ii iii iv v    >*< Planck i' ii' iii' iv' v'      = Pretty (Planck (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v'))
@@ -100,7 +93,7 @@ x *< y = fmap (x*) y
 (>/) :: (Fractional x, Functor f, z ~ f x) => z -> x -> z
 x >/ y = fmap (/y) x
 
-(/<) :: (Fractional x, Functor f, Coercible (f x) (x /< f)) => x -> f x -> x /< f
+(/<) :: (Fractional x, Functor f, Coercible (f x) ((f^-1) x)) => x -> f x -> (f^-1) x
 x /< y = coerce (fmap (x/) y)
 
 (>*<) :: (Num x, Coercible (f x) x, Coercible (f' x) x, Applicative (f>*<f')) => f x -> f' x -> (f >*< f') x
@@ -115,7 +108,6 @@ x >+< y = (+) <$> x <*> y
 (>-<) :: (Num x, Applicative f, z ~ f x) => z -> z -> z
 x >-< y = (-) <$> x <*> y
 
-infixl 5 >+<, >-<
-infixl 6 *<, /<, >/
-infixl 7 >*<, >/<
+infixl 6 >+<, >-<
+infixl 7 >*<, >/<, *<, /<, >/
 infixr 8 ^+, ^-
