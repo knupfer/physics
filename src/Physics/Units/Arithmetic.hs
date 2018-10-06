@@ -54,8 +54,8 @@ type SquareRoot d = NthRoot 2 d
 squareRoot :: (Coercible (f x) (SquareRoot f x), Floating x, Functor f) => f x -> SquareRoot f x
 squareRoot = nthRoot (Proxy :: Proxy 2)
 
-type SquareCube d = NthRoot 3 d
-cubeRoot :: (Coercible (f x) (SquareCube f x), Floating x, Functor f) => f x -> SquareCube f x
+type CubeRoot d = NthRoot 3 d
+cubeRoot :: (Coercible (f x) (CubeRoot f x), Floating x, Functor f) => f x -> CubeRoot f x
 cubeRoot = nthRoot (Proxy :: Proxy 3)
 
 hypercube :: (KnownNat n, Num x, Functor f, Coercible (f x) ((f^+n) x)) => Proxy n -> f x -> (f^+n) x
