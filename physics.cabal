@@ -24,6 +24,7 @@ library
                    , Physics.Units.SI.Base
                    , Physics.Units.SI.Derived
                    , Physics.Units.SI.Constants
+                   , Physics.Units.SI.Constants.Measured
                    , Physics.Units.Planck
                    , Physics.Units.Planck.Base
                    , Physics.Units.Planck.Derived

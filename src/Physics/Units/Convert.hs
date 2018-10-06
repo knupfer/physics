@@ -8,11 +8,9 @@ module Physics.Units.Convert where
 import Data.Proxy
 import GHC.TypeLits
 
-import Physics.Units.SI.Type
+import Physics.Units.SI
+import Physics.Units.SI.Constants
 import Physics.Units.Planck.Type
-import Physics.Units.Arithmetic
-
-import qualified Physics.Units.SI.Constants as SI
 
 class ExpVal (x :: Exponent) where
   expVal :: Proxy x -> Integer
@@ -24,7 +22,7 @@ instance KnownNat n => ExpVal ('Negative n) where
   expVal _ = negate (natVal (Proxy :: Proxy n))
 
 fromSI :: forall x metre kilogram second ampere kelvin.
-  ( Fractional x
+  ( Floating x
   , ExpVal metre
   , ExpVal kilogram
   , ExpVal (Minus second ampere)
@@ -35,17 +33,17 @@ fromSI :: forall x metre kilogram second ampere kelvin.
 fromSI (SI x)
   = Planck
   $ x
-  / value SI.planckLength      ^^ expVal (Proxy :: Proxy metre)
-  / value SI.planckMass        ^^ expVal (Proxy :: Proxy kilogram)
-  / value SI.planckTime        ^^ expVal (Proxy :: Proxy (Minus second ampere))
-  / value SI.planckCharge      ^^ expVal (Proxy :: Proxy ampere)
-  / value SI.planckTemperature ^^ expVal (Proxy :: Proxy kelvin)
+  / value planckLength      ^^ expVal (Proxy :: Proxy metre)
+  / value planckMass        ^^ expVal (Proxy :: Proxy kilogram)
+  / value planckTime        ^^ expVal (Proxy :: Proxy (Minus second ampere))
+  / value planckCharge      ^^ expVal (Proxy :: Proxy ampere)
+  / value planckTemperature ^^ expVal (Proxy :: Proxy kelvin)
 
 fromPlanck :: forall x metre kilogram second coulomb kelvin.
-  ( Fractional x
+  ( Floating x
   , ExpVal metre
   , ExpVal kilogram
-  , ExpVal (Plus second coulomb)
+  , ExpVal second
   , ExpVal coulomb
   , ExpVal kelvin
   ) => Planck metre kilogram second coulomb kelvin x
@@ -53,9 +51,9 @@ fromPlanck :: forall x metre kilogram second coulomb kelvin.
 fromPlanck (Planck x)
   = SI
   $ x
-  * value SI.planckLength      ^^ expVal (Proxy :: Proxy metre)
-  * value SI.planckMass        ^^ expVal (Proxy :: Proxy kilogram)
-  * value SI.planckTime        ^^ expVal (Proxy :: Proxy (Plus second coulomb))
-  * value SI.planckCharge      ^^ expVal (Proxy :: Proxy coulomb)
-  * value SI.planckTemperature ^^ expVal (Proxy :: Proxy kelvin)
+  * value planckLength      ^^ expVal (Proxy :: Proxy metre)
+  * value planckMass        ^^ expVal (Proxy :: Proxy kilogram)
+  * value planckTime        ^^ expVal (Proxy :: Proxy second)
+  * value planckCharge      ^^ expVal (Proxy :: Proxy coulomb)
+  * value planckTemperature ^^ expVal (Proxy :: Proxy kelvin)
 
