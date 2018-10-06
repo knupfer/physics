@@ -10,25 +10,25 @@ import Physics.Units.SI.Constants.Measured
 
 -- Base exact constants
 
-hyperfineSplittingFrequencyOfCaesium133 :: Num a => (Second^-1) a
+hyperfineSplittingFrequencyOfCaesium133 :: Num a => (One>/<Second) a
 hyperfineSplittingFrequencyOfCaesium133 = SI 9192631770
 
 lightspeed :: Num a => (Metre>/<Second) a
 lightspeed = SI 299792458
 
-planckConstant :: Fractional a => (Kilogram>*<Metre^+2>/<Second) a
+planckConstant :: Fractional a => (Kilogram>*<Square Metre>/<Second) a
 planckConstant = SI 6.62607015e-34
 
 elementaryCharge :: Fractional a => (Ampere>*<Second) a
 elementaryCharge = SI 1.602176634e-19
 
-boltzmannConstant :: Fractional a => (Kilogram>*<Metre^+2>/<Second^+2>/<Kelvin) a
+boltzmannConstant :: Fractional a => (Kilogram>*<Square Metre>/<Square Second>/<Kelvin) a
 boltzmannConstant = SI 1.380649e-23
 
-avogadroConstant :: Num a => (Mole^-1) a
+avogadroConstant :: Num a => (One>/<Mole) a
 avogadroConstant = SI (602214076*10^(15 :: Int))
 
-luminousEfficacy :: Num a => (Candela>*<Second^+3>/<Kilogram>/<Metre^+2) a
+luminousEfficacy :: Num a => (Candela>*<Cube Second>/<Kilogram>/<Square Metre) a
 luminousEfficacy = SI 683
 
 -- Derived exact constants
@@ -39,17 +39,17 @@ secondRadiationConstant = planckConstant>*<lightspeed>/<boltzmannConstant
 molarPlanckConstant :: Fractional a => (Joule>*<Second>/<Mole) a
 molarPlanckConstant = planckConstant>*<avogadroConstant
 
-firstRadiationConstant :: Floating a => (Watt>*<Metre^+2) a
-firstRadiationConstant = 2*pi *<planckConstant>*<lightspeed>*<lightspeed
+firstRadiationConstant :: Floating a => (Watt>*<Square Metre) a
+firstRadiationConstant = 2*pi *<planckConstant>*<square lightspeed
 
-firstRadiationConstantForSpectralRadiance :: Floating a => (Watt>*<Metre^+2) a
-firstRadiationConstantForSpectralRadiance = 2 *<planckConstant>*<lightspeed>*<lightspeed
+firstRadiationConstantForSpectralRadiance :: Floating a => (Watt>*<Square Metre) a
+firstRadiationConstantForSpectralRadiance = 2 *<planckConstant>*<square lightspeed
 
 efimovFactor :: Fractional a => One a
 efimovFactor = 22.7 *<one
 
 conductanceQuantum :: Fractional a => Siemens a
-conductanceQuantum = 2 *<elementaryCharge>*<elementaryCharge>/<planckConstant
+conductanceQuantum = 2 *<square elementaryCharge>/<planckConstant
 
 inverseConductanceQuantum :: Fractional a => Ohm a
 inverseConductanceQuantum = 1 /<conductanceQuantum
@@ -64,7 +64,7 @@ magneticFluxQuantum :: Fractional a => Weber a
 magneticFluxQuantum = 1 /<josephsonConstant
 
 vonKlitzingConstant :: Fractional a => Ohm a
-vonKlitzingConstant = planckConstant>/<elementaryCharge>/<elementaryCharge
+vonKlitzingConstant = planckConstant>/<square elementaryCharge
 
 faradayConstant :: Fractional a => (Coulomb>/<Mole) a
 faradayConstant = elementaryCharge>*<avogadroConstant
@@ -72,13 +72,13 @@ faradayConstant = elementaryCharge>*<avogadroConstant
 gasConstant :: Fractional a => (Joule>/<Mole>/<Kelvin) a
 gasConstant = boltzmannConstant>*<avogadroConstant
 
-stefanBoltzmannConstant :: Floating a => (Watt>/<Metre^+2>/<Kelvin^+4) a
-stefanBoltzmannConstant = 2/15*pi**5 *<boltzmannConstant>*<boltzmannConstant>*<boltzmannConstant>*<boltzmannConstant>/<planckConstant>/<planckConstant>/<planckConstant>/<lightspeed>/<lightspeed
+stefanBoltzmannConstant :: Floating a => (Watt>/<Square Metre>/<Tesseract Kelvin) a
+stefanBoltzmannConstant = 2/15*pi**5 *<tesseract boltzmannConstant>/<cube planckConstant>/<square lightspeed
 
 -- Derived uncertain constants
 
 planckLength :: Floating a => Metre a
-planckLength = SI . sqrt . value $ reducedPlanckConstant>/<lightspeed>/<lightspeed>/<lightspeed
+planckLength = SI . sqrt . value $ reducedPlanckConstant>/<cube lightspeed
   >*<gravitationalConstant
 
 planckMass :: Floating a => Kilogram a
@@ -86,7 +86,7 @@ planckMass = SI . sqrt . value $ reducedPlanckConstant>*<lightspeed
   >/<gravitationalConstant
 
 planckTime :: Floating a => Second a
-planckTime = SI . sqrt . value $ reducedPlanckConstant>/<lightspeed>/<lightspeed>/<lightspeed>/<lightspeed>/<lightspeed
+planckTime = SI . sqrt . value $ reducedPlanckConstant>/<penteract lightspeed
   >*<gravitationalConstant
 
 planckCharge :: Floating a => Coulomb a
@@ -94,52 +94,52 @@ planckCharge = elementaryCharge
   >/<fmap sqrt fineStructureConstant
 
 planckTemperature :: Floating a => Kelvin a
-planckTemperature = SI . sqrt . value $ reducedPlanckConstant>*<lightspeed>*<lightspeed>*<lightspeed>*<lightspeed>*<lightspeed>/<boltzmannConstant>/<boltzmannConstant
+planckTemperature = SI . sqrt . value $ reducedPlanckConstant>*<penteract lightspeed>/<cube boltzmannConstant
   >/<gravitationalConstant
 
-magneticConstant :: Fractional a => (Newton>/<Ampere^+2) a
-magneticConstant = 2 *<planckConstant>/<lightspeed>/<elementaryCharge>/<elementaryCharge
+magneticConstant :: Fractional a => (Newton>/<Square Ampere) a
+magneticConstant = 2 *<planckConstant>/<lightspeed>/<square elementaryCharge
   >*<fineStructureConstant
 
 electricConstant :: Fractional a => (Farad>/<Metre) a
-electricConstant = 1/2 *<elementaryCharge>*<elementaryCharge>/<planckConstant>/<lightspeed
+electricConstant = 1/2 *<square elementaryCharge>/<planckConstant>/<lightspeed
   >/<fineStructureConstant
 
 impedanceOfVacuum :: Fractional a => Ohm a
-impedanceOfVacuum = 2 *<planckConstant>/<elementaryCharge>/<elementaryCharge
+impedanceOfVacuum = 2 *<planckConstant>/<square elementaryCharge
   >*<fineStructureConstant
 
-coulombConstant :: Floating a => (Kilogram>*<Metre^+3>/<Second^+4>/<Ampere^+2) a
-coulombConstant = lightspeed>*<reducedPlanckConstant>/<elementaryCharge>/<elementaryCharge
+coulombConstant :: Floating a => (Kilogram>*<Cube Metre>/<Tesseract Second>/<Square Ampere) a
+coulombConstant = lightspeed>*<reducedPlanckConstant>/<square elementaryCharge
   >*<fineStructureConstant
 
 bohrMagneton :: Floating a => (Joule>/<Tesla) a
 bohrMagneton = 1/(8*pi) *<elementaryCharge>*<lightspeed
-  >/<rydbergConstant>*<fineStructureConstant>*<fineStructureConstant
+  >/<rydbergConstant>*<square fineStructureConstant
 
 electronMass :: Fractional a => Kilogram a
 electronMass = 2 *<planckConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant
+  >*<rydbergConstant>/<square fineStructureConstant
 
 electronMolarMass :: Fractional a => (Kilogram>/<Mole) a
 electronMolarMass = 2 *<planckConstant>*<avogadroConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant
+  >*<rydbergConstant>/<square fineStructureConstant
 
 unifiedAtomicMassUnit :: Fractional a => Kilogram a
 unifiedAtomicMassUnit = 2 *<planckConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant>/<electronRelativeMass
+  >*<rydbergConstant>/<square fineStructureConstant>/<electronRelativeMass
 
 molarMassConstant :: Fractional a => (Kilogram>/<Mole) a
 molarMassConstant = 2 *<planckConstant>*<avogadroConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant>/<electronRelativeMass
+  >*<rydbergConstant>/<square fineStructureConstant>/<electronRelativeMass
 
 atomicMassOfCarbon12 :: Fractional a => Kilogram a
 atomicMassOfCarbon12 = 24 *<planckConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant>/<electronRelativeMass
+  >*<rydbergConstant>/<square fineStructureConstant>/<electronRelativeMass
 
 molarMassOfCarbon12 :: Fractional a => (Kilogram>/<Mole) a
 molarMassOfCarbon12 = 24 *<planckConstant>*<avogadroConstant>/<lightspeed
-  >*<rydbergConstant>/<fineStructureConstant>/<fineStructureConstant>/<electronRelativeMass
+  >*<rydbergConstant>/<square fineStructureConstant>/<electronRelativeMass
 
 nuclearMagneton :: Floating a => (Joule>/<Tesla) a
 nuclearMagneton = 1/2 *<elementaryCharge>*<reducedPlanckConstant
@@ -151,16 +151,16 @@ bohrRadius = 1/(4*pi)
 
 classicalElectronRadius :: Floating a => Metre a
 classicalElectronRadius = 1/(4*pi)
-  *<fineStructureConstant>*<fineStructureConstant>*<fineStructureConstant>/<rydbergConstant
+  *<cube fineStructureConstant>/<rydbergConstant
 
 hartreeEnergy :: Fractional a => Joule a
 hartreeEnergy = 2 *<planckConstant>*<lightspeed
   >*<rydbergConstant
 
-quantumOfCirculation :: Fractional a => (Metre^+2>/<Second) a
+quantumOfCirculation :: Fractional a => (Square Metre>/<Second) a
 quantumOfCirculation = 1/4 *<lightspeed
-   >*<fineStructureConstant>*<fineStructureConstant>/<rydbergConstant
+   >*<square fineStructureConstant>/<rydbergConstant
 
-thomsonCrossSection :: Floating a => (Metre^+2) a
+thomsonCrossSection :: Floating a => Square Metre a
 thomsonCrossSection = 1/(6*pi)
-  *<fmap (**6) fineStructureConstant>/<rydbergConstant>/<rydbergConstant
+  *<fmap (**6) fineStructureConstant>/<square rydbergConstant

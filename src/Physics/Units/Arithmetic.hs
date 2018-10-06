@@ -6,13 +6,14 @@
 
 module Physics.Units.Arithmetic where
 
-import qualified Physics.Units.SI.Base     as SI
-import qualified Physics.Units.SI.Derived  as SI
+import qualified Physics.Units.SI.Base    as SI
+import qualified Physics.Units.SI.Derived as SI
 import Physics.Units.SI.Type (SI)
 import Physics.Units.Planck.Type (Planck)
 import Physics.Units.Type
 
 import Data.Coerce
+import Data.Proxy
 import GHC.TypeLits
 
 type family Plus a b where
@@ -34,13 +35,6 @@ type family Minus a b where
   Minus x ('Negative m) = Plus x ('Positive m)
   Minus x ('Positive m) = Plus x ('Negative m)
 
-type family (^+) d n where
-  d ^+ 0 = d >/< d
-  d ^+ n = d >*< d^+(n-1)
-
-type family (^-) d n where
-  d ^- n = d >/< d^+(n+1)
-
 type family (>*<) d d' where
   SI i ii iii iv v vi vii >*< SI i' ii' iii' iv' v' vi' vii' = Pretty (SI (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v') (Plus vi vi') (Plus vii vii'))
   Planck i ii iii iv v    >*< Planck i' ii' iii' iv' v'      = Pretty (Planck (Plus i i') (Plus ii ii') (Plus iii iii') (Plus iv iv') (Plus v v'))
@@ -48,6 +42,33 @@ type family (>*<) d d' where
 type family (>/<) d d' where
   SI i ii iii iv v vi vii >/< SI i' ii' iii' iv' v' vi' vii' = Pretty (SI (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v') (Minus vi vi') (Minus vii vii'))
   Planck i ii iii iv v    >/< Planck i' ii' iii' iv' v'      = Pretty (Planck (Minus i i') (Minus ii ii') (Minus iii iii') (Minus iv iv') (Minus v v'))
+
+type family (^+) d n where
+  d ^+ 0 = d >/< d
+  d ^+ n = d >*< d^+(n-1)
+
+type family (^-) d n where
+  d ^- n = d >/< d^+(n+1)
+
+hypercube :: (KnownNat n, Num x, Functor f, Coercible (f x) ((f^+n) x)) => Proxy n -> f x -> (f^+n) x
+hypercube p = coerce . fmap (^natVal p)
+
+type Square d = d^+2
+square :: (Coercible (f x) (Square f x), Num x, Functor f) => f x -> Square f x
+square = hypercube (Proxy :: Proxy 2)
+
+type Cube d = d^+3
+cube :: (Coercible (f x) (Cube f x), Num x, Functor f) => f x -> Cube f x
+cube = hypercube (Proxy :: Proxy 3)
+
+type Tesseract d = d^+4
+tesseract :: (Coercible (f x) (Tesseract f x), Num x, Functor f) => f x -> Tesseract f x
+tesseract = hypercube (Proxy :: Proxy 4)
+
+type Penteract d = d^+5
+penteract :: (Coercible (f x) (Penteract f x), Num x, Functor f) => f x -> Penteract f x
+penteract = hypercube (Proxy :: Proxy 5)
+
 
 type family Pretty d where
   Pretty (SI N2 N1 P3 P2  Z  Z  Z) = SI.Siemens
