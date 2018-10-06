@@ -1,9 +1,9 @@
-module Physics.Units.SI.Base
-  ( module Physics.Units.SI.Base
-  , module Physics.Units.SI.Type
+module Physics.Units.Base
+  ( module Physics.Units.Base
+  , module Physics.Units.Type
   ) where
 
-import Physics.Units.SI.Type
+import Physics.Units.Type
 
 type One = SI Z Z Z Z Z Z Z
 one :: Num a => One a

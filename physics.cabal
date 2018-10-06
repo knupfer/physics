@@ -1,5 +1,5 @@
 name:                physics
-version:             0.1.0.0
+version:             0.1.1.0
 synopsis:            dimensions, quantities and constants
 description:         Library to work with typed SI dimensions and common physical functions and constants.
 license:             BSD3
@@ -16,15 +16,15 @@ tested-with:         GHC == 7.10.3
                    , GHC == 8.4.3
                    , GHC == 8.6.1
 source-repository    head
-   Type: git
-   Location: https://github.com/knupfer/physics
+  Type: git
+  Location: https://github.com/knupfer/physics
 
 library
-  exposed-modules:   Physics.Units.SI
-                   , Physics.Units.SI.Base
-                   , Physics.Units.SI.Derived
-                   , Physics.Units.SI.Constants
-                   , Physics.Units.SI.Constants.Measured
+  exposed-modules:   Physics.Units
+                   , Physics.Units.Base
+                   , Physics.Units.Derived
+                   , Physics.Units.Constants
+                   , Physics.Units.Constants.Measured
                    , Physics.Units.Planck
                    , Physics.Units.Planck.Base
                    , Physics.Units.Planck.Derived
@@ -32,7 +32,6 @@ library
                    , Physics.Units.Arithmetic
                    , Physics.Units.Prefixes
   other-modules:     Physics.Units.Type
-                   , Physics.Units.SI.Type
                    , Physics.Units.Planck.Type
   build-depends:     base >= 4.8 && < 5
   ghc-options:       -Wall
