@@ -13,7 +13,7 @@ fineStructureConstant :: Fractional a => One a
 fineStructureConstant = 7.2973525664e-3 *< one
 
 rydbergConstant :: Fractional a => (One >/< Metre) a
-rydbergConstant = 1.0973731568508e-7 *< one >/< metre
+rydbergConstant = 10973731.568508 *< one >/< metre
 
 gravitationalConstant :: Fractional a => (Cube Metre >/< Kilogram >/< Square Second) a
 gravitationalConstant = 6.67408e-11 *< cube metre >/< kilogram >/< square second
