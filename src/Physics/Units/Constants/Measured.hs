@@ -6,27 +6,20 @@ import Physics.Units.Arithmetic
 import Physics.Units.Type
 import Physics.Units.Base
 
--- Common
+-- Measured constants sorted by ascending precision
 
-fineStructureConstant :: Fractional a => One a
-fineStructureConstant = 7.2973525664e-3 *< one
-
-rydbergConstant :: Fractional a => (One >/< Metre) a
-rydbergConstant = 10973731.568508 *< one >/< metre
-
-gravitationalConstant :: Fractional a => (Cube Metre >/< Kilogram >/< Square Second) a
-gravitationalConstant = 6.67408e-11 *< cube metre >/< kilogram >/< square second
-
-electronRelativeMass :: Fractional a => One a
-electronRelativeMass = 5.485799111e-4 *< one
-
--- Uncommon
-
-protonMass :: Fractional a => Kilogram a
-protonMass = 1.672621898e-27 *< kilogram
-
-weakMixingAngle :: Fractional a => One a
-weakMixingAngle = 0.2223 *< one
-
+weakMixingAngle             :: Fractional a => One a
+gravitationalConstant       :: Fractional a => (Cube Metre >/< Kilogram >/< Square Second) a
 wienDisplacementLawConstant :: Fractional a => (Metre >*< Kelvin) a
-wienDisplacementLawConstant = 2.8977729e-3 *< metre >*< kelvin
+protonMass                  :: Fractional a => Kilogram a
+electronRelativeMass        :: Fractional a => One a
+fineStructureConstant       :: Fractional a => One a
+rydbergConstant             :: Fractional a => (One >/< Metre) a
+
+weakMixingAngle             = SI 2.223e-1          -- (21)
+gravitationalConstant       = SI 6.67408e-11       -- (31)
+wienDisplacementLawConstant = SI 2.8977729e-3      -- (17)
+protonMass                  = SI 1.672621898e-27   -- (21)
+fineStructureConstant       = SI 7.2973525664e-3   -- (17)
+electronRelativeMass        = SI 5.48579909070e-4  -- (16)
+rydbergConstant             = SI 1.0973731568508e7 -- (65)
