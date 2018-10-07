@@ -6,8 +6,7 @@ import Physics.Units.Arithmetic
 import Physics.Units.Type
 import Physics.Units.Base
 
-electronRelativeMass :: Fractional a => One a
-electronRelativeMass = 5.485799111e-4 *< one
+-- Common
 
 fineStructureConstant :: Fractional a => One a
 fineStructureConstant = 7.2973525664e-3 *< one
@@ -17,6 +16,11 @@ rydbergConstant = 10973731.568508 *< one >/< metre
 
 gravitationalConstant :: Fractional a => (Cube Metre >/< Kilogram >/< Square Second) a
 gravitationalConstant = 6.67408e-11 *< cube metre >/< kilogram >/< square second
+
+electronRelativeMass :: Fractional a => One a
+electronRelativeMass = 5.485799111e-4 *< one
+
+-- Uncommon
 
 protonMass :: Fractional a => Kilogram a
 protonMass = 1.672621898e-27 *< kilogram

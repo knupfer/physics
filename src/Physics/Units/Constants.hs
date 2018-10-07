@@ -77,6 +77,9 @@ gasConstant = boltzmannConstant >*< avogadroConstant
 stefanBoltzmannConstant :: Floating a => (Watt >/< Square Metre >/< Tesseract Kelvin) a
 stefanBoltzmannConstant = 2/15*pi**5 *< tesseract boltzmannConstant >/< cube planckConstant >/< square lightspeed
 
+electronVolt :: Fractional a => Joule a
+electronVolt = elementaryCharge >/< coulomb >*< joule
+
 -- Derived uncertain constants
 
 planckLength :: Floating a => Metre a
