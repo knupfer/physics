@@ -49,6 +49,8 @@ newtypes and operators are defined in terms of num operators.
 ## Example usage
 
 ```haskell
+{-# LANGUAGE TypeOperators #-}
+
 module Main where
 
 import Physics.Units
@@ -77,6 +79,9 @@ momentum = mass >*< speed
 
 kineticEnergy :: Joule Double
 kineticEnergy = 1/2 *< mass >*< square speed
+
+-- This would be a type error:
+-- kineticEnergy = 1/2 *< mass >*< speed
 ```
 
 ## Compatibility
