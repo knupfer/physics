@@ -1,5 +1,5 @@
 name:                physics
-version:             0.1.1.0
+version:             0.1.2.0
 synopsis:            dimensions, quantities and constants
 description:         Library to work with typed SI dimensions and common physical functions and constants.
 license:             BSD3
