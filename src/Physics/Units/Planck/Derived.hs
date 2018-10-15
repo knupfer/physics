@@ -1,6 +1,6 @@
 module Physics.Units.Planck.Derived where
 
-import Physics.Units.Planck.Base
+import Physics.Units.Type
 
 type Siemens   = Planck N2 N1 P1 P2  Z; siemens   :: Num a => Siemens   a; siemens   = Planck 1
 type Farad     = Planck N2 N1 P2 P2  Z; farad     :: Num a => Farad     a; farad     = Planck 1

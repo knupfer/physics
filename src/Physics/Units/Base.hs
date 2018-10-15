@@ -1,7 +1,4 @@
-module Physics.Units.Base
-  ( module Physics.Units.Base
-  , module Physics.Units.Type
-  ) where
+module Physics.Units.Base where
 
 import Physics.Units.Type
 

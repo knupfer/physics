@@ -9,7 +9,6 @@ module Physics.Units.Arithmetic where
 
 import qualified Physics.Units.Base    as SI
 import qualified Physics.Units.Derived as SI
-import Physics.Units.Planck.Type (Planck)
 import Physics.Units.Type
 
 import Data.Coerce
@@ -162,4 +161,3 @@ type family Pretty d where
   Pretty (SI P2 P1 N2 N1  Z  Z  Z) = SI.Weber
   Pretty (SI P2 P1 N2  Z  Z  Z  Z) = SI.Joule
   Pretty d = d
-

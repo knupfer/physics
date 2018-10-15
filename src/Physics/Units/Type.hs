@@ -38,19 +38,19 @@ newtype SI
   x = SI x
   deriving (Eq, Ord, Functor, Enum, Read, Bounded, Generic, Foldable, Traversable)
 
-instance Applicative (SI i ii iii iv v vi vii) where
+instance Applicative (SI metre kilogram second ampere kelvin mole candela) where
   pure = SI
   SI f <*> x = f <$> x
 
 #if __GLASGOW_HASKELL__ > 802
 instance (Show x, KnownSymbol z,
-   (z ~ ( AppendSymbol (ShowUnit "m" i)
-          ( AppendSymbol (ShowUnit "kg" ii)
-            ( AppendSymbol (ShowUnit "s" iii)
-              ( AppendSymbol (ShowUnit "A" iv)
-                ( AppendSymbol (ShowUnit "K" v)
-                  ( AppendSymbol (ShowUnit "mol" vi) (ShowUnit "cd" vii)))))))))
-  => Show (SI i ii iii iv v vi vii x) where
+   (z ~ ( AppendSymbol (ShowUnit "m" metre)
+          ( AppendSymbol (ShowUnit "kg" kilogram)
+            ( AppendSymbol (ShowUnit "s" second)
+              ( AppendSymbol (ShowUnit "A" ampere)
+                ( AppendSymbol (ShowUnit "K" kelvin)
+                  ( AppendSymbol (ShowUnit "mol" mole) (ShowUnit "cd" candela)))))))))
+  => Show (SI metre kilogram second ampere kelvin mole candela x) where
   show (SI x) = show x ++ symbolVal (Proxy :: Proxy z)
 
 type family ShowUnit u e where
@@ -74,4 +74,28 @@ type family ShowNatural a where
   ShowNatural 8 = "⁸"
   ShowNatural 9 = "⁹"
   ShowNatural n = AppendSymbol (ShowNatural (Div n 10)) (ShowNatural (Mod n 10))
+#endif
+
+newtype Planck
+  (metre    :: Exponent)
+  (kilogram :: Exponent)
+  (second   :: Exponent)
+  (coulomb  :: Exponent)
+  (kelvin   :: Exponent)
+  x = Planck x
+  deriving (Eq, Ord, Functor, Enum, Read, Bounded, Generic, Foldable, Traversable)
+
+instance Applicative (Planck metre kilogram second coulomb kelvin) where
+  pure = Planck
+  Planck f <*> x = f <$> x
+
+#if __GLASGOW_HASKELL__ > 802
+instance (Show x, KnownSymbol z,
+   (z ~ ( AppendSymbol (ShowUnit "mₚ" metre)
+          ( AppendSymbol (ShowUnit "kgₚ" kilogram)
+            ( AppendSymbol (ShowUnit "sₚ" second)
+              ( AppendSymbol (ShowUnit "Cₚ" coulomb)
+                ( ShowUnit "Kₚ" kelvin)))))))
+  => Show (Planck metre kilogram second coulomb kelvin x) where
+  show (Planck x) = show x ++ symbolVal (Proxy :: Proxy z)
 #endif

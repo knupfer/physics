@@ -21,6 +21,7 @@ source-repository    head
 
 library
   exposed-modules:   Physics.Units
+                   , Physics.Units.Type
                    , Physics.Units.Base
                    , Physics.Units.Derived
                    , Physics.Units.Constants
@@ -31,8 +32,6 @@ library
                    , Physics.Units.Convert
                    , Physics.Units.Arithmetic
                    , Physics.Units.Prefixes
-  other-modules:     Physics.Units.Type
-                   , Physics.Units.Planck.Type
   build-depends:     base >= 4.8 && < 5
   ghc-options:       -Wall
   hs-source-dirs:    src

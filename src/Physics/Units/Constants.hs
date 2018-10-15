@@ -5,6 +5,7 @@ module Physics.Units.Constants
   , module Physics.Units.Constants.Measured
   ) where
 
+import Physics.Units.Type
 import Physics.Units.Base
 import Physics.Units.Derived
 import Physics.Units.Arithmetic

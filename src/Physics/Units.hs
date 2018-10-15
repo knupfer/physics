@@ -2,6 +2,7 @@ module Physics.Units
   ( module X
   ) where
 
+import Physics.Units.Type       as X
 import Physics.Units.Arithmetic as X
 import Physics.Units.Base       as X
 import Physics.Units.Constants  as X

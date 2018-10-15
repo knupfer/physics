@@ -1,9 +1,6 @@
-module Physics.Units.Planck.Base
-  ( module Physics.Units.Planck.Base
-  , module Physics.Units.Planck.Type
-  ) where
+module Physics.Units.Planck.Base where
 
-import Physics.Units.Planck.Type
+import Physics.Units.Type
 
 type One = Planck Z Z Z Z Z
 one :: Num a => One a

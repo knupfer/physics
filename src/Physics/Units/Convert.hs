@@ -11,7 +11,6 @@ import GHC.TypeLits
 import Physics.Units.Type
 import Physics.Units.Constants
 import Physics.Units.Arithmetic
-import Physics.Units.Planck.Type
 
 class ExpVal (x :: Exponent) where
   expVal :: Proxy x -> Integer

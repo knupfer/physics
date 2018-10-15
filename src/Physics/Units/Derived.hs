@@ -1,6 +1,6 @@
 module Physics.Units.Derived where
 
-import Physics.Units.Base
+import Physics.Units.Type
 
 type Siemens   = SI N2 N1 P3 P2  Z  Z  Z; siemens   :: Num a => Siemens   a; siemens   = SI 1
 type Farad     = SI N2 N1 P4 P2  Z  Z  Z; farad     :: Num a => Farad     a; farad     = SI 1
