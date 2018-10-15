@@ -9,6 +9,8 @@ maintainer:          fknupfer@gmail.com
 copyright:           2018, Florian Knupfer
 category:            Science
 build-type:          Simple
+extra-source-files:  ChangeLog.md
+                   , Readme.md
 cabal-version:       >=1.10
 tested-with:         GHC == 7.10.3
                    , GHC == 8.0.2
